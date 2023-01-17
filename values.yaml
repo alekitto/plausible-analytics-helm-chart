@@ -3,14 +3,8 @@
 
 # Plausible specific values
 
-disableAuth: false # Disables authentication completely, no registration, login will be shown.
 disableRegistration: false # Disables registration of new users, keep your admin credentials handy ;)
 baseURL: # The hosting url of the server, used for URL generation. In production systems, this should be your ingress host.
-
-adminUser:
-  email:  # Admin user's email
-  name:   # Display name admin user
-  password: # Admin user password
 
 # SECRET_KEY_BASE is Helm randAlphaNum 90
 

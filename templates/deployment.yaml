@@ -52,27 +52,6 @@ spec:
             - /entrypoint.sh
             - run
           env:
-            {{- if .Values.adminUser.email }}
-            - name: ADMIN_USER_EMAIL
-              valueFrom:
-                secretKeyRef:
-                  key: ADMIN_USER_EMAIL
-                  name: {{ include "plausible-analytics.fullname" . }}
-            {{- end }}
-            {{- if .Values.adminUser.email }}
-            - name: ADMIN_USER_NAME
-              valueFrom:
-                secretKeyRef:
-                  key: ADMIN_USER_NAME
-                  name: {{ include "plausible-analytics.fullname" . }}
-            {{- end }}
-            {{- if .Values.adminUser.email }}
-            - name: ADMIN_USER_PWD
-              valueFrom:
-                secretKeyRef:
-                  key: ADMIN_USER_PWD
-                  name: {{ include "plausible-analytics.fullname" . }}
-            {{- end }}
             {{- if .Values.google.clientID }}
             - name: GOOGLE_CLIENT_ID
               valueFrom:
@@ -168,10 +147,6 @@ spec:
                   name: {{ include "plausible-analytics.fullname" . }}
             {{- end }}
             {{- end }}
-            {{- if .Values.disableAuth }}
-            - name: DISABLE_AUTH
-              value: {{ .Values.disableAuth | toString | quote }}
-            {{- end }}
             {{- if .Values.disableRegistration }}
             - name: DISABLE_REGISTRATION
               value: {{ .Values.disableRegistration | toString | quote }}
@@ -244,29 +219,8 @@ spec:
             - /bin/sh
             - -x
             - -c
-            - /entrypoint.sh db createdb && /entrypoint.sh db migrate && /entrypoint.sh db init-admin
+            - /entrypoint.sh db createdb && /entrypoint.sh db migrate
           env:
-            {{- if .Values.adminUser.email }}
-            - name: ADMIN_USER_EMAIL
-              valueFrom:
-                secretKeyRef:
-                  key: ADMIN_USER_EMAIL
-                  name: {{ include "plausible-analytics.fullname" . }}
-            {{- end }}
-            {{- if .Values.adminUser.email }}
-            - name: ADMIN_USER_NAME
-              valueFrom:
-                secretKeyRef:
-                  key: ADMIN_USER_NAME
-                  name: {{ include "plausible-analytics.fullname" . }}
-            {{- end }}
-            {{- if .Values.adminUser.email }}
-            - name: ADMIN_USER_PWD
-              valueFrom:
-                secretKeyRef:
-                  key: ADMIN_USER_PWD
-                  name: {{ include "plausible-analytics.fullname" . }}
-            {{- end }}
             {{- if .Values.database.enabled }}
             {{- if .Values.database.url }}
             - name: DATABASE_URL
@@ -289,10 +243,6 @@ spec:
                   key: CLICKHOUSE_DATABASE_URL
                   name: {{ include "plausible-analytics.fullname" . }}
             {{- end }}
-            {{- end }}
-            {{- if .Values.disableAuth }}
-            - name: DISABLE_AUTH
-              value: {{ .Values.disableAuth | toString | quote }}
             {{- end }}
             {{- if .Values.disableRegistration }}
             - name: DISABLE_REGISTRATION
