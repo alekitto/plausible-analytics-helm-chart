@@ -1,0 +1,19 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "plausible-analytics.fullname" . }}
+  labels:
+    app: plausible
+    helm.sh/chart: {{ include "plausible-analytics.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{- if .Values.labels }}
+    {{- with .Values.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- end }}
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: plausible
+      {{- include "plausible-analytics.selectorLabels" . | nindent 6 }}
