@@ -158,7 +158,10 @@ spec:
             {{- if .Values.geolocation.enabled }}
             {{- if .Values.geolocation.license_key }}
             - name: MAXMIND_LICENSE_KEY
-              value: {{ .Values.geolocation.license_key | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "plausible-analytics.fullname" . }}
+                  key: MAXMIND_LICENSE_KEY
             {{- end }}
             {{- if .Values.geolocation.edition }}
             - name: MAXMIND_EDITION
@@ -172,10 +175,6 @@ spec:
           volumeMounts:
             - name: app-tmp
               mountPath: /app/tmp
-            {{- if .Values.geolocation.enabled }}
-            - name: geoip
-              mountPath: /geoip/
-            {{- end }}
           livenessProbe:
             httpGet:
               path: /
