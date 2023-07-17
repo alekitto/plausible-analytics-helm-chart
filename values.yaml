@@ -32,10 +32,10 @@ smtp: # Plausible uses and SMTP server to send transactional emails e.g. account
 postmark: #Alternatively, you can use Postmark to send transactional emails. In this case, use the following parameters:
   apiKey:
 
-geolocation: # MaxMind geolocation database#
+geolocation: # MaxMind geolocation database
   enabled: false # Enable/Disable the automated fetch of
-  account_id: # Account/User ID from maxmind.com
-  license_key: # My License Key from maxmind.com
+  edition: ~ # GeoLite2-City / GeoLite2-Country
+  license_key: ~ # My License Key from maxmind.com
 
 # Google Search Integration
 # See: https://docs.plausible.io/self-hosting-configuration#google-search-integration

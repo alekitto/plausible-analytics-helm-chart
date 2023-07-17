@@ -156,8 +156,14 @@ spec:
               value: {{ .Values.baseURL | toString | quote }}
             {{- end }}
             {{- if .Values.geolocation.enabled }}
-            - name: GEOLITE2_COUNTRY_DB
-              value: "/geoip/GeoLite2-Country.mmdb"
+            {{- if .Values.geolocation.license_key }}
+            - name: MAXMIND_LICENSE_KEY
+              value: {{ .Values.geolocation.license_key | quote }}
+            {{- end }}
+            {{- if .Values.geolocation.edition }}
+            - name: MAXMIND_EDITION
+              value: {{ .Values.geolocation.edition | quote }}
+            {{- end }}
             {{ end }}
           ports:
             - name: http
@@ -180,34 +186,6 @@ spec:
               port: http
           resources:
           {{- toYaml .Values.resources | nindent 12 }}
-
-        {{- if .Values.geolocation.enabled }}
-        - name: geoipupdate
-          image: maxmindinc/geoipupdate
-          env:
-            - name: GEOIPUPDATE_FREQUENCY
-              value: "168"
-            - name: GEOIPUPDATE_EDITION_IDS
-              value: GeoLite2-Country
-            {{- if .Values.geolocation.account_id }}
-            - name: GEOIPUPDATE_ACCOUNT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "plausible-analytics.fullname" . }}
-                  key: GEOIPUPDATE_ACCOUNT_ID
-            {{ end }}
-            {{- if .Values.geolocation.license_key }}
-            - name: GEOIPUPDATE_LICENSE_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "plausible-analytics.fullname" . }}
-                  key: GEOIPUPDATE_LICENSE_KEY
-            {{ end }}
-          volumeMounts:
-            - name: geoip
-              mountPath: /usr/share/GeoIP
-        {{ end }}
-
 
       initContainers:
         - name: plausible-init
@@ -359,20 +337,9 @@ spec:
                   key: POSTMARK_API_KEY
                   name: {{ include "plausible-analytics.fullname" . }}
             {{- end }}
-            {{- if .Values.geoliteCountryDB }}
-            - name: GEOLITE2_COUNTRY_DB
-              valueFrom:
-                secretKeyRef:
-                  key: GEOLITE2_COUNTRY_DB
-                  name: {{ include "plausible-analytics.fullname" . }}
-          {{- end }}
           volumeMounts:
             - name: app-tmp
               mountPath: /app/tmp
-            {{- if .Values.geolocation.enabled }}
-            - name: geoip
-              mountPath: /geoip/
-            {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
       {{- toYaml . | nindent 8 }}
@@ -388,7 +355,3 @@ spec:
       volumes:
         - name: app-tmp
           emptyDir: {}
-        {{- if .Values.geolocation.enabled }}
-        - name: geoip
-          emptyDir: {}
-        {{- end }}
