@@ -67,7 +67,7 @@ spec:
                   key: MAILER_EMAIL
                   name: {{ include "plausible-analytics.fullname" . }}
             {{- end }}
-            {{- if .Values.smtp.adapter }}
+            {{- if .Values.smtp.mailer.adapter }}
             - name: MAILER_ADAPTER
               valueFrom:
                 secretKeyRef:
@@ -247,7 +247,7 @@ spec:
                   key: MAILER_EMAIL
                   name: {{ include "plausible-analytics.fullname" . }}
             {{- end }}
-            {{- if .Values.smtp.adapter }}
+            {{- if .Values.smtp.mailer.adapter }}
             - name: MAILER_ADAPTER
               valueFrom:
                 secretKeyRef:
