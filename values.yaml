@@ -3,10 +3,17 @@
 
 # Plausible specific values
 
+disableAuth: false # Disables authentication completely, no registration, login will be shown.
 disableRegistration: false # Disables registration of new users, keep your admin credentials handy ;)
 baseURL: # The hosting url of the server, used for URL generation. In production systems, this should be your ingress host.
 
-# SECRET_KEY_BASE is Helm randAlphaNum 90
+adminUser:
+  email:  # Admin user's email
+  name:   # Display name admin user
+  password: # Admin user password
+
+secretKeyBase: "" # Defaults to random 90 characters alphanumeric string if not set
+totpVaultKey: "" # Defaults to random 32 characters alphanumeric string if not set
 
 database: # Postgres Database
   enabled: true
@@ -61,7 +68,7 @@ extraEnv: [] # Extra Env Variables that are passed down to plausible 1:1
 replicaCount: 1
 
 image:
-  repository: plausible/analytics
+  repository: ghcr.io/plausible/community-edition
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
