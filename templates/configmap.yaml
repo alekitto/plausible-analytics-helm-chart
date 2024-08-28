@@ -1,0 +1,12 @@
+{{- if .Values.extraConfig -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "plausible-analytics.fullname" . }}
+  labels:
+    app: plausible
+  {{- include "plausible-analytics.labels" . | nindent 4 }}
+data:
+  extra_config.exs: |-
+    {{ .Values.extraConfig | nindent 4 }}
+{{- end }}

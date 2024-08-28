@@ -160,6 +160,10 @@ spec:
             - name: BASE_URL
               value: {{ .Values.baseURL | toString | quote }}
             {{- end }}
+            {{- if .Values.extraConfig }}
+            - name: EXTRA_CONFIG_PATH
+              value: /app/extra_config.exs
+            {{- end }}
             {{- if .Values.geolocation.enabled }}
             {{- if .Values.geolocation.license_key }}
             - name: MAXMIND_LICENSE_KEY
@@ -180,6 +184,11 @@ spec:
           volumeMounts:
             - name: app-tmp
               mountPath: /app/tmp
+            {{- if .Values.extraConfig }}
+            - name: extra-config
+              mountPath: /app/extra_config.exs
+              subPath: extra_config.exs
+            {{- end }}
           livenessProbe:
             httpGet:
               path: /
@@ -238,6 +247,10 @@ spec:
             {{- if .Values.baseURL }}
             - name: BASE_URL
               value: {{ .Values.baseURL | toString | quote }}
+            {{- end }}
+            {{- if .Values.extraConfig }}
+            - name: EXTRA_CONFIG_PATH
+              value: /app/extra_config.exs
             {{- end }}
             {{- if .Values.smtp.enabled }}
             {{- if .Values.smtp.mailer.emailAddress }}
@@ -349,6 +362,11 @@ spec:
           volumeMounts:
             - name: app-tmp
               mountPath: /app/tmp
+            {{- if .Values.extraConfig }}
+            - name: extra-config
+              mountPath: /app/extra_config.exs
+              subPath: extra_config.exs
+            {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
       {{- toYaml . | nindent 8 }}
@@ -364,3 +382,8 @@ spec:
       volumes:
         - name: app-tmp
           emptyDir: {}
+        {{- if .Values.extraConfig }}
+        - name: extra-config
+          configMap:
+            name: {{ include "plausible-analytics.fullname" . }}
+        {{- end }}
